@@ -3,11 +3,31 @@ import Colors from '@/constants/Colors';
 import Screen from '@/components/Screen';
 import { ComicSansBold, MonoText } from '@/components/StyledText';
 import InputText from '@/components/InputText';
-import Button from '@/components/button';
 import Separator from '@/components/Separator';
 import Icon from '@expo/vector-icons/Ionicons'
+import { Controller, useForm } from 'react-hook-form';
+import Button from '@/components/Button';
+import { 
+  createUserWithEmailAndPassword,
+   signInWithEmailAndPassword, 
+} from 'firebase/auth';
+import { auth } from '@/services/firebaseConfig';
+
+type Form = {
+  email: string
+  password: string
+}
 
 export default function SignIn() {
+
+  const { handleSubmit, control } = useForm<Form>()
+
+  const handleSignIn = async ({ email, password}: Form)=>{
+     console.log(email,password)
+     const user = await signInWithEmailAndPassword(auth,email, password)
+     console.log(user)
+  }
+
   return (
    <Screen styles={styles.container}>
     <ComicSansBold style={styles.logo}>
@@ -15,13 +35,34 @@ export default function SignIn() {
     </ComicSansBold>
     <View style={styles.group}>
       <MonoText>Email</MonoText>
-      <InputText />
+      <Controller
+         name='email'
+          control={control}
+          render={({ field: { onBlur, onChange, value}})=>(
+            <InputText
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+             />
+          )}
+      
+      />
     </View>
     <View style={styles.group}>
       <MonoText>Password</MonoText>
-      <InputText />
+      <Controller
+         name='password'
+          control={control}
+          render={({ field: { onBlur, onChange, value}})=>(
+            <InputText
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+             />
+          )}
+      />
     </View>
-    <Button title='Entrar'/>
+    <Button title='Entrar' onPress={handleSubmit(handleSignIn)}/>
     <Separator/>
     <TouchableOpacity style={styles.googleButton}>
         <Icon name='logo-google' size={24}/>

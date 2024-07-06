@@ -2,12 +2,18 @@
 import { StyleSheet, TextInput, TouchableOpacityProps } from 'react-native'
 import Colors from '@/constants/Colors'
 
-type Props = TouchableOpacityProps &  {}
+interface Props extends  TouchableOpacityProps {
+  value: string
+  onChange: (text: string)=> void
+}
 
-export default function InputText({...props}: Props) {
+export default function InputText({value, onChange,...props}: Props) {
   return (
     <TextInput 
         {...props}
+        autoCapitalize='none'
+        onChangeText={onChange}
+        value={value}
         style={styles.input}
       />
   )
