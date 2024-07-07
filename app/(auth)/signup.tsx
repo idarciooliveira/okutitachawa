@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Colors from '@/constants/Colors';
 import Screen from '@/components/Screen';
 import { ComicSansBold, MonoText } from '@/components/StyledText';
@@ -7,31 +7,34 @@ import Separator from '@/components/Separator';
 import Icon from '@expo/vector-icons/Ionicons'
 import { Controller, useForm } from 'react-hook-form';
 import Button from '@/components/Button';
-import { 
-  createUserWithEmailAndPassword,
-   signInWithEmailAndPassword, 
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '@/services/firebaseConfig';
+import { Link, router } from 'expo-router';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProps, FormSchema } from '@/schema/Form';
 
-type Form = {
-  email: string
-  password: string
-}
 
-export default function SignIn() {
+export default function SignUp() {
 
-  const { handleSubmit, control } = useForm<Form>()
+  const { handleSubmit, control, reset , formState: { errors}} = useForm<FormProps>({
+    resolver: zodResolver(FormSchema)
+  })
 
-  const handleSignIn = async ({ email, password}: Form)=>{
-     console.log(email,password)
-     const user = await signInWithEmailAndPassword(auth,email, password)
-     console.log(user)
+  const handleSignUp = async ({ email, password}: FormProps)=>{
+     try {
+       await createUserWithEmailAndPassword(auth,email, password)
+       reset()
+       Alert.alert('A sua conta foi criada com sucesso')
+       router.push('/signin')
+     } catch (error: any) {
+       Alert.alert(error.message)
+     }
   }
 
   return (
    <Screen styles={styles.container}>
     <ComicSansBold style={styles.logo}>
-      Okutitachawa
+      Criar Conta
     </ComicSansBold>
     <View style={styles.group}>
       <MonoText>Email</MonoText>
@@ -44,9 +47,12 @@ export default function SignIn() {
               onChange={onChange}
               onBlur={onBlur}
              />
-          )}
-      
-      />
+             )}
+             />
+      {errors.password &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
+         {errors.password?.message}
+        </MonoText>
+      }
     </View>
     <View style={styles.group}>
       <MonoText>Password</MonoText>
@@ -61,15 +67,27 @@ export default function SignIn() {
              />
           )}
       />
+        {errors.email &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
+         {errors.email?.message}
+        </MonoText>
+      }
     </View>
-    <Button title='Entrar' onPress={handleSubmit(handleSignIn)}/>
+    <Button title='Criar Conta' onPress={handleSubmit(handleSignUp)}/>
     <Separator/>
     <TouchableOpacity style={styles.googleButton}>
         <Icon name='logo-google' size={24}/>
         <MonoText style={styles.googleButtonText}>
-           Entrar com o Google
+           Criar conta com o Google
         </MonoText>
    </TouchableOpacity>
+   <Link href={'/signin'} style={{ width: '100%', textAlign: 'center'}}>
+        <MonoText style={{ 
+          fontWeight: '400',
+          textDecorationLine: 'underline'
+        }}>
+          Já tenho uma conta
+        </MonoText>
+   </Link>
    </Screen>
   )
 }

@@ -1,5 +1,5 @@
 
-import { StyleSheet, TextInput, TouchableOpacityProps } from 'react-native'
+import { StyleSheet, TextInput, TouchableOpacityProps, useColorScheme } from 'react-native'
 import Colors from '@/constants/Colors'
 
 interface Props extends  TouchableOpacityProps {
@@ -8,13 +8,16 @@ interface Props extends  TouchableOpacityProps {
 }
 
 export default function InputText({value, onChange,...props}: Props) {
+
+  const colorScheme = useColorScheme();
+  
   return (
     <TextInput 
         {...props}
         autoCapitalize='none'
         onChangeText={onChange}
         value={value}
-        style={styles.input}
+        style={[styles.input, { color: colorScheme  == 'dark' ? Colors.dark.text : Colors.light.text }]}
       />
   )
 }
@@ -26,6 +29,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         borderColor: Colors.border,
         borderWidth: 1,
-        borderRadius: 8
+        borderRadius: 8,
       }
 })
