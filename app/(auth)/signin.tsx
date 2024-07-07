@@ -12,6 +12,7 @@ import { auth } from '@/services/firebaseConfig';
 import { Link, router } from 'expo-router';
 import { FormProps, FormSchema } from '@/schema/Form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import ErrorLabel from '@/components/ErrorLabel';
 
 
 export default function SignIn() {
@@ -22,9 +23,9 @@ export default function SignIn() {
 
   const handleSignIn = async ({ email, password}: FormProps)=>{
      try {
-      const result = await signInWithEmailAndPassword(auth,email, password)
-      console.log(result.user)
-     
+      const user = await signInWithEmailAndPassword(auth,email, password)
+      if(user) router.replace('/(tabs)')
+      reset()
      } catch (error: any) {
        Alert.alert(error.message)
      }
@@ -38,7 +39,7 @@ export default function SignIn() {
     <View style={styles.group}>
       <MonoText>Email</MonoText>
       <Controller
-         name='email'
+          name='email'
           control={control}
           render={({ field: { onBlur, onChange, value}})=>(
             <InputText
@@ -48,10 +49,7 @@ export default function SignIn() {
              />
           )}
       />
-        {errors.email &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
-         {errors.email?.message}
-        </MonoText>
-      }
+      {errors.email && <ErrorLabel text={errors.email.message}/>}
     </View>
     <View style={styles.group}>
       <MonoText>Password</MonoText>
@@ -66,10 +64,7 @@ export default function SignIn() {
              />
           )}
       />
-        {errors.password &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
-         {errors.password?.message}
-        </MonoText>
-      }
+       {errors.password && <ErrorLabel text={errors.password.message}/>}
     </View>
     <Button title='Entrar' onPress={handleSubmit(handleSignIn)}/>
     <Separator/>

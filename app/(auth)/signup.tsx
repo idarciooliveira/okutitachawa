@@ -12,6 +12,7 @@ import { auth } from '@/services/firebaseConfig';
 import { Link, router } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProps, FormSchema } from '@/schema/Form';
+import ErrorLabel from '@/components/ErrorLabel';
 
 
 export default function SignUp() {
@@ -22,10 +23,10 @@ export default function SignUp() {
 
   const handleSignUp = async ({ email, password}: FormProps)=>{
      try {
-       await createUserWithEmailAndPassword(auth,email, password)
+       const user = await createUserWithEmailAndPassword(auth,email, password)
        reset()
        Alert.alert('A sua conta foi criada com sucesso')
-       router.push('/signin')
+       if(user) router.replace('/(tabs)')
      } catch (error: any) {
        Alert.alert(error.message)
      }
@@ -49,10 +50,7 @@ export default function SignUp() {
              />
              )}
              />
-      {errors.password &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
-         {errors.password?.message}
-        </MonoText>
-      }
+     {errors.email && <ErrorLabel text={errors.email.message}/>}
     </View>
     <View style={styles.group}>
       <MonoText>Password</MonoText>
@@ -67,10 +65,7 @@ export default function SignUp() {
              />
           )}
       />
-        {errors.email &&  <MonoText style={{ fontSize: 12, color: '#FF7369'}}>
-         {errors.email?.message}
-        </MonoText>
-      }
+     {errors.password && <ErrorLabel text={errors.password.message}/>}
     </View>
     <Button title='Criar Conta' onPress={handleSubmit(handleSignUp)}/>
     <Separator/>
