@@ -1,25 +1,79 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image } from "react-native";
 
-import { Text, View } from '@/components/Themed';
-import Button from '@/components/Button';
-import Screen from '@/components/Screen';
-import { MonoText } from '@/components/StyledText';
-import { useAuth } from '@/context/auth';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/services/firebaseConfig';
+import Screen from "@/components/Screen";
+import MenuItem from "@/components/MenuItem";
+import { MonoText } from "@/components/StyledText";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useColorScheme } from "@/components/useColorScheme.web";
+import Colors from "@/constants/Colors";
 
 export default function HomeScreen() {
-  const { user } = useAuth()
+  const color = useColorScheme();
+
   return (
-    <Screen>
-      <MonoText>Welcome, {user?.email}</MonoText>
-      <Button title='signout'
-        onPress={()=> signOut(auth)}
+    <Screen styles={styles.container}>
+      <MenuItem
+        text="Gado"
+        image={require("../../assets/images/animals/male-cow.png")}
+        onPress={() => {}}
       />
+      <MenuItem
+        text="Caprinos"
+        image={require("../../assets/images/animals/male-goat.png")}
+        onPress={() => {}}
+      />
+      <MenuItem
+        text="Suínos"
+        image={require("../../assets/images/animals/male-pig.png")}
+        onPress={() => {}}
+      />
+      <MenuItem
+        text="Relatórios"
+        image={require("../../assets/images/reports.png")}
+        onPress={() => {}}
+      />
+      <TouchableOpacity
+        style={[
+          styles.qrCodeButton,
+          {
+            backgroundColor:
+              color == "light"
+                ? Colors.light.background
+                : Colors.dark.background,
+          },
+        ]}
+      >
+        <MonoText style={styles.qrCodeText}>
+          Leia o QR Code do seu animal, para obter mais informações
+        </MonoText>
+        <MaterialCommunityIcons size={60} name="qrcode-scan" />
+      </TouchableOpacity>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  qrCodeButton: {
+    width: "100%",
+    height: 120,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    borderRadius: 10,
+    padding: 16,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  qrCodeText: { fontSize: 12, flex: 2 },
 });

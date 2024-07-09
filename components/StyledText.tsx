@@ -5,7 +5,7 @@ export function MonoText(props: TextProps) {
 }
 
 export function ComicSans(props: TextProps) {
-  return <Text {...props} style={[props.style, { fontFamily: 'ComicSans', fontSize: 16 }]} />;
+  return <Text {...props} style={[props.style, { fontFamily: 'ComicSans' }]} />;
 }
 
 export function ComicSansBold(props: TextProps) {
