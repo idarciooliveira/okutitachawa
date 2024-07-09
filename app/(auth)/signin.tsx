@@ -23,8 +23,7 @@ export default function SignIn() {
 
   const handleSignIn = async ({ email, password}: FormProps)=>{
      try {
-      const user = await signInWithEmailAndPassword(auth,email, password)
-      if(user) router.replace('/(tabs)')
+      await signInWithEmailAndPassword(auth,email, password)
       reset()
      } catch (error: any) {
        Alert.alert(error.message)

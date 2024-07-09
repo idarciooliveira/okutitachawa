@@ -11,7 +11,7 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -19,24 +19,40 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName='home'
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        headerStyle: {
+          backgroundColor: Colors.primary,
+        },
+        headerTitleStyle: {
+          color: '#fff',
+          fontFamily: 'ComicSansBold',
+        },
+        headerTitleAlign: 'center'
       }}>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
-          title: 'Dashboard',
+          title: 'Okutitachawa',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="two"
+        <Tabs.Screen
+        name="notification"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Notificações',
+          tabBarIcon: ({ color }) => <TabBarIcon  name="bell" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Minha Conta',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
         }}
       />
     </Tabs>

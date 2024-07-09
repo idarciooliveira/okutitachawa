@@ -23,10 +23,9 @@ export default function SignUp() {
 
   const handleSignUp = async ({ email, password}: FormProps)=>{
      try {
-       const user = await createUserWithEmailAndPassword(auth,email, password)
+       await createUserWithEmailAndPassword(auth,email, password)
        reset()
        Alert.alert('A sua conta foi criada com sucesso')
-       if(user) router.replace('/(tabs)')
      } catch (error: any) {
        Alert.alert(error.message)
      }

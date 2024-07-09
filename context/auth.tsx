@@ -1,42 +1,58 @@
+import { User, onAuthStateChanged } from "firebase/auth";
 
-import { auth } from '@/services/firebaseConfig';
-import React, { createContext, useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  PropsWithChildren,
+} from "react";
 
-export type UserProps = {
-    email: string | null
-    id: string
+import { useSegments, useRouter } from "expo-router";
+import { auth } from "@/services/firebaseConfig";
+
+interface AuthProps {
+  user?: User | null;
+  initialized: boolean;
+}
+export const AuthContext = createContext<AuthProps>({
+  initialized: false,
+});
+
+export function useAuth() {
+  return React.useContext(AuthContext);
 }
 
-type AuthContextProps = {
-    user: UserProps | null
-}
-
-const AuthContext = createContext({} as AuthContextProps);
-
-const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<UserProps | null>(null);
+export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const [user, setUser] = useState<User | null>();
+  const [initialized, setInitialized] = useState<boolean>(false);
+  const router = useRouter();
+  const segments = useSegments();
 
   useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        console.log('auth state changed ' + user?.uid)
-        if(user){
-            setUser({
-                email: user?.email,
-                id: user?.uid
-            });
-        }else{
-            setUser(null)
-        }
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setInitialized(true);
     });
-    return unsubscribe;
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const useProtectedRoute = () => {
+    useEffect(() => {
+      const inTabsGroup = segments[0] === "(tabs)";
+
+      if (!user && inTabsGroup) {
+        router.replace("/(auth)/signin");
+      } else if (user && !inTabsGroup) {
+        router.replace("/(tabs)/home");
+      }
+    }, [user, segments]);
+  };
+
+  useProtectedRoute();
+
+  const value = {
+    user,
+    initialized,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
-
-export { AuthContext, AuthProvider };
