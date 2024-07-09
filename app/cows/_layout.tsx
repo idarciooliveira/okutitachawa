@@ -15,23 +15,29 @@ export default function HomeLayout() {
           fontFamily: "ComicSansBold",
         },
         headerTitleAlign: "center",
+        headerLeft: () => (
+          <AntDesign
+            color={"#fff"}
+            onPress={() => router.back()}
+            size={24}
+            name="arrowleft"
+          />
+        ),
       }}
     >
       <Stack.Screen
         name="index"
         options={{
           title: "Gados",
-          headerLeft: (cx) => (
-            <AntDesign
-              color={"#fff"}
-              onPress={() => router.back()}
-              size={24}
-              name="arrowleft"
-            />
-          ),
         }}
       />
       <Stack.Screen name="[id]" />
+      <Stack.Screen
+        name="register"
+        options={{
+          title: "Novo Gado",
+        }}
+      />
     </Stack>
   );
 }

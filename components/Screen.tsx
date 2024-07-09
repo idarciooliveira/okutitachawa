@@ -1,9 +1,10 @@
+import { StyleProp, ViewStyle } from "react-native";
 import { View } from "./Themed";
 import Constants from "expo-constants";
 
 type Props = {
   children: any;
-  styles?: any;
+  styles?: StyleProp<ViewStyle>;
 };
 export default function Screen({ children, styles }: Props) {
   return (
