@@ -4,8 +4,9 @@ import Screen from "@/components/Screen";
 import MenuItem from "@/components/MenuItem";
 import { MonoText } from "@/components/StyledText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useColorScheme } from "@/components/useColorScheme.web";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   const color = useColorScheme();
@@ -15,7 +16,9 @@ export default function HomeScreen() {
       <MenuItem
         text="Gado"
         image={require("../../assets/images/animals/male-cow.png")}
-        onPress={() => {}}
+        onPress={() => {
+          router.push("/cows");
+        }}
       />
       <MenuItem
         text="Caprinos"
@@ -46,7 +49,11 @@ export default function HomeScreen() {
         <MonoText style={styles.qrCodeText}>
           Leia o QR Code do seu animal, para obter mais informações
         </MonoText>
-        <MaterialCommunityIcons size={60} name="qrcode-scan" />
+        <MaterialCommunityIcons
+          color={color == "light" ? "#000" : "#fff"}
+          size={60}
+          name="qrcode-scan"
+        />
       </TouchableOpacity>
     </Screen>
   );

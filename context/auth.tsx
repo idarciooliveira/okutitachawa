@@ -37,11 +37,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const useProtectedRoute = () => {
     useEffect(() => {
-      const inTabsGroup = segments[0] === "(tabs)";
+      const protectedRoute = segments[0] !== "(auth)";
 
-      if (!user && inTabsGroup) {
+      if (!user && protectedRoute) {
         router.replace("/(auth)/signin");
-      } else if (user && !inTabsGroup) {
+      } else if (user && !protectedRoute) {
         router.replace("/(tabs)/home");
       }
     }, [user, segments]);
