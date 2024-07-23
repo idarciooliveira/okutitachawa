@@ -31,7 +31,12 @@ export default function HomeLayout() {
           title: "Gados",
         }}
       />
-      <Stack.Screen name="[id]" />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: "Detalhe",
+        }}
+      />
       <Stack.Screen
         name="register"
         options={{

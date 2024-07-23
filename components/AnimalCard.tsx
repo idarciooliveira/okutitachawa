@@ -8,12 +8,14 @@ type Props = {
   TagId: string;
   apelido: string;
   genero: string;
+  onPress: () => void;
 };
 
-export default function AnimalCard({ TagId, apelido, genero }: Props) {
+export default function AnimalCard({ TagId, apelido, genero, onPress }: Props) {
   const color = useColorScheme();
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={[
         styles.container,
         {

@@ -19,6 +19,7 @@ const auth = initializeAuth(app,{
 })
 const database = getFirestore(app)
 
+
 export {
     auth,
     getAuth,
