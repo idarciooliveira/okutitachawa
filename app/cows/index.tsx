@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { TextInput, StyleSheet, View, FlatList } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
-import { collection, getDocs } from "firebase/firestore";
-import { database } from "@/services/firebaseConfig";
 import Colors from "@/constants/Colors";
 import AnimalCard from "@/components/AnimalCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import { MonoText } from "@/components/StyledText";
+import { getDocuments } from "@/services/api";
 
 type CowProps = {
   id: string;
@@ -28,15 +27,7 @@ export default function Cows() {
 
   const loadingCows = async () => {
     setLoading(true);
-    const querySnapshot = await getDocs(collection(database, "/gados"));
-
-    const data = querySnapshot.docs.map((cow) => {
-      return {
-        ...cow.data(),
-        id: cow.id,
-      };
-    }) as CowProps[];
-
+    const data = await getDocuments<CowProps>("gados");
     setCows(data);
     setLoading(false);
   };

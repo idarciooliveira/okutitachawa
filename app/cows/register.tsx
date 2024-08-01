@@ -9,8 +9,7 @@ import ErrorLabel from "@/components/ErrorLabel";
 import Button from "@/components/Button";
 import { useAuth } from "@/context/auth";
 import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
-import { database } from "@/services/firebaseConfig";
+import { saveDoc } from "@/services/api";
 
 export default function CowRegister() {
   const { user } = useAuth();
@@ -29,14 +28,11 @@ export default function CowRegister() {
   const handleRegister = async (values: RegisterCowProps) => {
     try {
       setLoading(true);
-      const doc = await addDoc(collection(database, "gados"), {
-        ...values,
-        userId: user?.uid,
-      });
-
-      console.log(doc);
-      Alert.alert("Gado registrado!");
-      reset();
+      if (user?.uid) {
+        await saveDoc("gados", values, user.uid);
+        Alert.alert("Gado registrado!");
+        reset();
+      }
       setLoading(false);
     } catch (error: any) {
       setLoading(false);

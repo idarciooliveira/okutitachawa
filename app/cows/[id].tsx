@@ -1,46 +1,36 @@
-import { Text } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import Screen from "@/components/Screen";
-import { doc, getDoc } from "firebase/firestore";
-import { database } from "@/services/firebaseConfig";
-import { useAuth } from "@/context/auth";
+import { useWindowDimensions } from "react-native";
+import React from "react";
+import { View } from "@/components/Themed";
+import { TabView, SceneMap } from "react-native-tab-view";
+import CustomTabView from "@/components/CustomTabView";
+import CowDetail from "@/components/CowDetail";
 
-type CowProps = {
-  id: string;
-  genero: string;
-  apelido: string;
-  userId: string;
-  tagId: string;
-};
+const CowEventsPage = () => (
+  <View style={{ flex: 1, backgroundColor: "#2fe507" }} />
+);
+
+const renderScene = SceneMap({
+  detail: () => <CowDetail />,
+  event: CowEventsPage,
+});
 
 export default function Detail() {
-  const { user } = useAuth();
+  const layout = useWindowDimensions();
 
-  const { id } = useLocalSearchParams() as { id: string };
+  const [index, setIndex] = React.useState(0);
 
-  const [loading, setLoading] = useState(false);
-  const [cow, setCow] = useState<CowProps | null>(null);
+  const [routes] = React.useState([
+    { key: "detail", title: "Detalhe" },
+    { key: "event", title: "Eventos" },
+  ]);
 
-  useEffect(() => {
-    getCowById();
-  }, []);
-
-  const getCowById = async () => {
-    setLoading(true);
-
-    if (user?.uid) {
-      const result = await getDoc(doc(database, "gados", id));
-      const data = { ...result.data(), id: result.id } as CowProps;
-      setCow(data);
-    }
-
-    setLoading(false);
-  };
   return (
-    <Screen>
-      <Text>Detail</Text>
-      <Text>{JSON.stringify(cow)}</Text>
-    </Screen>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      renderTabBar={CustomTabView}
+    />
   );
 }
