@@ -11,7 +11,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { AuthProvider } from "@/context/auth";
-
+import { MenuProvider } from "react-native-popup-menu";
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = { initialRouteName: "/(tabs)" };
@@ -50,7 +50,9 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <Slot />
+        <MenuProvider>
+          <Slot />
+        </MenuProvider>
       </AuthProvider>
     </ThemeProvider>
   );

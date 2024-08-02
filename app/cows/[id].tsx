@@ -1,17 +1,13 @@
 import { useWindowDimensions } from "react-native";
 import React from "react";
-import { View } from "@/components/Themed";
 import { TabView, SceneMap } from "react-native-tab-view";
 import CustomTabView from "@/components/CustomTabView";
 import CowDetail from "@/components/CowDetail";
-
-const CowEventsPage = () => (
-  <View style={{ flex: 1, backgroundColor: "#2fe507" }} />
-);
+import EventDetail from "@/components/EventDetail";
 
 const renderScene = SceneMap({
   detail: () => <CowDetail />,
-  event: CowEventsPage,
+  event: () => <EventDetail />,
 });
 
 export default function Detail() {

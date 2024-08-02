@@ -1,7 +1,7 @@
-import { getDoc, doc, collection, getDocs, addDoc } from "firebase/firestore";
+import { getDoc, doc, collection, getDocs, addDoc, where } from "firebase/firestore";
 import { database } from "./firebaseConfig";
 
-type Path = 'gados' | 'users' 
+type Path = 'gados' | 'users' | 'events'
 
 export async function saveDoc<T>(path: Path, values: T, userId: string) {
      await addDoc(collection(database, path), {
@@ -19,12 +19,24 @@ export async function  getDocById<T>(id: string, path: Path): Promise<T>{
 export async function getDocuments<T>(path: Path): Promise<T[]> {
     const querySnapshot = await getDocs(collection(database, path));
 
-    const data = querySnapshot.docs.map((cow) => {
+    const data = querySnapshot.docs.map((data) => {
       return {
-        ...cow.data(),
-        id: cow.id,
+        ...data.data(),
+        id: data.id,
       };
     }) as T[];
 
     return data
+}
+
+export async function getDocumentsById<T>(path: string, field: string, id: string): Promise<T[]> {
+  //@ts-ignore
+  const querySnapshot = await getDocs(collection(database, path), where(field,'==',id));
+  const data = querySnapshot.docs.map((data) => {
+    return {
+      ...data.data(),
+      id: data.id,
+    };
+  }) as T[];
+  return data
 }

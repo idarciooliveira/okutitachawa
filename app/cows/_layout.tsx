@@ -1,3 +1,4 @@
+import Actions from "@/components/Actions";
 import Colors from "@/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Stack, router } from "expo-router";
@@ -35,6 +36,13 @@ export default function HomeLayout() {
         name="[id]"
         options={{
           title: "Detalhe",
+          headerRight: () => <Actions />,
+        }}
+      />
+      <Stack.Screen
+        name="new-event/[id]"
+        options={{
+          title: "Registrar Evento",
         }}
       />
       <Stack.Screen

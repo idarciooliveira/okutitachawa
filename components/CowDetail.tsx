@@ -2,12 +2,12 @@ import { useAuth } from "@/context/auth";
 import { getDocById } from "@/services/api";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useTransition, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import LoadingIndicator from "./LoadingIndicator";
 import { MonoText } from "./StyledText";
 import Screen from "@/components/Screen";
 import Colors from "@/constants/Colors";
-import { useColorScheme } from "./useColorScheme";
+import { View } from "./Themed";
 
 type CowProps = {
   id: string;
@@ -25,7 +25,6 @@ export default function CowDetailPage() {
   const { user } = useAuth();
   const { id } = useLocalSearchParams() as { id: string };
   const [cow, setCow] = useState<CowProps | null>(null);
-  const color = useColorScheme();
   const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
@@ -43,55 +42,50 @@ export default function CowDetailPage() {
   };
 
   return (
-    <Screen styles={{ paddingTop: 0 }}>
-      <LoadingIndicator loading={isLoading} />
-      <View
-        style={[
-          styles.card,
-          {
-            backgroundColor:
-              color == "light"
-                ? Colors.light.background
-                : Colors.dark.background,
-          },
-        ]}
-      >
-        <MonoText style={{ marginBottom: 16, fontWeight: "bold" }}>
-          Informações Gerais
-        </MonoText>
-        <View style={styles.labelContainer}>
-          <MonoText>N da Tag</MonoText>
-          <MonoText>{cow?.tagId}</MonoText>
+    <Screen styles={{ paddingTop: 12 }}>
+      {isLoading ? (
+        <LoadingIndicator loading={isLoading} />
+      ) : (
+        <View style={[styles.card]}>
+          <MonoText style={{ marginBottom: 16, fontWeight: "bold" }}>
+            Informações Gerais
+          </MonoText>
+          <View style={styles.labelContainer}>
+            <MonoText>N da Tag</MonoText>
+            <MonoText>{cow?.tagId}</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Apelido</MonoText>
+            <MonoText>{cow?.apelido}</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Idade</MonoText>
+            {cow?.dataDeNascimento && (
+              <MonoText>{cow.dataDeNascimento}</MonoText>
+            )}
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Genero</MonoText>
+            <MonoText>{cow?.genero}</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Peso</MonoText>
+            <MonoText>{cow?.peso} KG</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Raça</MonoText>
+            <MonoText>{cow?.raca}</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Tag Id Mãe</MonoText>
+            <MonoText>{cow?.tagIdMae}</MonoText>
+          </View>
+          <View style={styles.labelContainer}>
+            <MonoText>Tag Id Pai</MonoText>
+            <MonoText>{cow?.tagIdPai}</MonoText>
+          </View>
         </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Apelido</MonoText>
-          <MonoText>{cow?.apelido}</MonoText>
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Idade</MonoText>
-          {cow?.dataDeNascimento && <MonoText>{cow.dataDeNascimento}</MonoText>}
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Genero</MonoText>
-          <MonoText>{cow?.genero}</MonoText>
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Peso</MonoText>
-          <MonoText>{cow?.peso} KG</MonoText>
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Raça</MonoText>
-          <MonoText>{cow?.raca}</MonoText>
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Tag Id Mãe</MonoText>
-          <MonoText>{cow?.tagIdMae}</MonoText>
-        </View>
-        <View style={styles.labelContainer}>
-          <MonoText>Tag Id Pai</MonoText>
-          <MonoText>{cow?.tagIdPai}</MonoText>
-        </View>
-      </View>
+      )}
     </Screen>
   );
 }
