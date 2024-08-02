@@ -1,29 +1,49 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import { Text, View } from '@/components/Themed';
+import { View } from "@/components/Themed";
+import { useAuth } from "@/context/auth";
+import { MonoText } from "@/components/StyledText";
+import Button from "@/components/Button";
+import { signOut } from "firebase/auth";
+import { auth } from "@/services/firebaseConfig";
+import Screen from "@/components/Screen";
+import Colors from "@/constants/Colors";
 
 export default function Account() {
+  const { user } = useAuth();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-    </View>
+    <Screen styles={styles.container}>
+      <View style={styles.user}>
+        <MonoText
+          style={{
+            fontSize: 38,
+          }}
+        >
+          {user?.email?.slice(0, 1).toUpperCase()}
+          {user?.email?.slice(1, 2).toUpperCase()}
+        </MonoText>
+      </View>
+      <MonoText>{user?.email}</MonoText>
+      <Button title="Terminar sessão" onPress={() => signOut(auth)} />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 12,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  user: {
+    width: 100,
+    height: 100,
+    borderColor: Colors.border,
+    borderWidth: 1,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
