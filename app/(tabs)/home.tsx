@@ -36,6 +36,7 @@ export default function HomeScreen() {
         onPress={() => {}}
       />
       <TouchableOpacity
+        onPress={() => router.push("/barcode")}
         style={[
           styles.qrCodeButton,
           {
