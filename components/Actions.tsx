@@ -28,6 +28,11 @@ export default function Actions() {
         />
         <MenuOption
           value={2}
+          text="Registrar ciclo estral"
+          onSelect={() => router.push(`/cows/estral/${id}`)}
+        />
+        <MenuOption
+          value={2}
           text="Codigo QR"
           onSelect={() => router.push(`/cows/qrcode/${id}`)}
         />

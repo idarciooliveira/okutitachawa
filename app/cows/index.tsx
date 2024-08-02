@@ -49,13 +49,13 @@ export default function Cows() {
                 : Colors.dark.background,
           },
         ]}
-        ListHeaderComponent={() => (
-          <TextInput
-            style={styles.searchbar}
-            autoCorrect={false}
-            placeholder="Pesquisar"
-          />
-        )}
+        // ListHeaderComponent={() => (
+        //   <TextInput
+        //     style={styles.searchbar}
+        //     autoCorrect={false}
+        //     placeholder="Pesquisar"
+        //   />
+        // )}
         ListHeaderComponentStyle={styles.separator}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={() => <MonoText>Nenhum gado registrado</MonoText>}

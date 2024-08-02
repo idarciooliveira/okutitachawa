@@ -1,7 +1,7 @@
 import { getDoc, doc, collection, getDocs, addDoc, where } from "firebase/firestore";
 import { database } from "./firebaseConfig";
 
-type Path = 'gados' | 'users' | 'events'
+type Path = 'gados' | 'users' | 'events' | 'ciclos'
 
 export async function saveDoc<T>(path: Path, values: T, userId: string) {
      await addDoc(collection(database, path), {
