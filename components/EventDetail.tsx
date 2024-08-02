@@ -45,7 +45,7 @@ export default function EventDetail() {
         <>
           {events &&
             events.map((event) => (
-              <View style={[styles.card]}>
+              <View style={[styles.card]} key={event.id}>
                 <MonoText style={{ marginBottom: 16, fontWeight: "bold" }}>
                   Evento: {event?.name}
                 </MonoText>

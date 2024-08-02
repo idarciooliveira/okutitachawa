@@ -26,6 +26,11 @@ export default function Actions() {
           text="Alterar estado"
           onSelect={() => router.push(`/cows/stages/${id}`)}
         />
+        <MenuOption
+          value={2}
+          text="Codigo QR"
+          onSelect={() => router.push(`/cows/qrcode/${id}`)}
+        />
       </MenuOptions>
     </Menu>
   );
