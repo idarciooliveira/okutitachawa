@@ -45,10 +45,14 @@ export default function EventDetail() {
         <>
           {events &&
             events.map((event) => (
-              <View style={[styles.card]} key={event.id}>
+              <View style={styles.card} key={event.id}>
                 <MonoText style={{ marginBottom: 16, fontWeight: "bold" }}>
-                  Evento: {event?.name}
+                  Evento {event?.name}
                 </MonoText>
+                <View style={styles.labelContainer}>
+                  <MonoText>{event.animalId}</MonoText>
+                  <MonoText>{event?.note}</MonoText>
+                </View>
                 <View style={styles.labelContainer}>
                   <MonoText>OBS</MonoText>
                   <MonoText>{event?.note}</MonoText>
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
-    marginBottom: 4,
+    marginBottom: 8,
   },
   labelContainer: {
     flexDirection: "row",

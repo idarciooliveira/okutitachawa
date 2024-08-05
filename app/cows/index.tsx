@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import { TextInput, StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import Colors from "@/constants/Colors";
 import AnimalCard from "@/components/AnimalCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import { MonoText } from "@/components/StyledText";
 import { getDocuments } from "@/services/api";
+import { IActionProps } from "react-native-floating-action";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useAuth } from "@/context/auth";
 
 type CowProps = {
   id: string;
@@ -16,8 +19,16 @@ type CowProps = {
   tagId: string;
 };
 
+const actions: IActionProps[] = [
+  {
+    name: "new_animal",
+    icon: <MaterialIcons name="add" size={32} color={"white"} />,
+  },
+];
+
 export default function Cows() {
   const color = useColorScheme();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [cows, setCows] = useState<CowProps[]>([]);
 
@@ -26,10 +37,12 @@ export default function Cows() {
   }, []);
 
   const loadingCows = async () => {
-    setLoading(true);
-    const data = await getDocuments<CowProps>("gados");
-    setCows(data);
-    setLoading(false);
+    if (user) {
+      setLoading(true);
+      const data = await getDocuments<CowProps>("gados", user.uid);
+      setCows(data);
+      setLoading(false);
+    }
   };
 
   const handleRegister = () => router.push("/cows/register");
@@ -58,7 +71,9 @@ export default function Cows() {
         // )}
         ListHeaderComponentStyle={styles.separator}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListEmptyComponent={() => <MonoText>Nenhum gado registrado</MonoText>}
+        ListEmptyComponent={() => (
+          <MonoText>{!loading && "Nenhum gado registrado"}</MonoText>
+        )}
         renderItem={({ item }) => (
           <AnimalCard
             onPress={() => router.push(`/cows/${item.id}`)}
@@ -69,8 +84,10 @@ export default function Cows() {
         )}
       />
       <FloatingAction
+        actions={actions}
+        overrideWithAction={true}
         visible={true}
-        onPressMain={handleRegister}
+        onPressItem={handleRegister}
         color={Colors.primary}
       />
     </>

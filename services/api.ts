@@ -1,4 +1,4 @@
-import { getDoc, doc, collection, getDocs, addDoc, where } from "firebase/firestore";
+import { getDoc, doc, collection, getDocs, addDoc, where, query } from "firebase/firestore";
 import { database } from "./firebaseConfig";
 
 type Path = 'gados' | 'users' | 'events' | 'ciclos'
@@ -16,8 +16,12 @@ export async function  getDocById<T>(id: string, path: Path): Promise<T>{
     return data
 }
 
-export async function getDocuments<T>(path: Path): Promise<T[]> {
-    const querySnapshot = await getDocs(collection(database, path));
+export async function getDocuments<T>(path: Path,userId: string): Promise<T[]> {
+  const q = query(
+    collection(database, path),
+    where("userId", "==", userId)
+  );
+    const querySnapshot = await getDocs(q);
 
     const data = querySnapshot.docs.map((data) => {
       return {
@@ -30,13 +34,15 @@ export async function getDocuments<T>(path: Path): Promise<T[]> {
 }
 
 export async function getDocumentsById<T>(path: string, field: string, id: string): Promise<T[]> {
-  //@ts-ignore
-  const querySnapshot = await getDocs(collection(database, path), where(field,'==',id));
+  const q = query(collection(database, path),where(field, "==", id));
+  const querySnapshot = await getDocs(q);
+
   const data = querySnapshot.docs.map((data) => {
     return {
       ...data.data(),
       id: data.id,
     };
   }) as T[];
+  
   return data
 }

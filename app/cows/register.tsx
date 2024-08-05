@@ -1,20 +1,28 @@
+import React, { useState, useTransition } from "react";
 import { View, StyleSheet, ScrollView, Alert } from "react-native";
-import Screen from "@/components/Screen";
+import Colors from "@/constants/Colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { RegisterCowProps, RegisterCowSchema } from "@/schema/RegisterCow";
-import { MonoText } from "@/components/StyledText";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { useAuth } from "@/context/auth";
+import Screen from "@/components/Screen";
+import Button from "@/components/Button";
 import InputText from "@/components/InputText";
 import ErrorLabel from "@/components/ErrorLabel";
-import Button from "@/components/Button";
-import { useAuth } from "@/context/auth";
-import { useState } from "react";
+import { MonoText } from "@/components/StyledText";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import DatePicker from "expo-datepicker";
+
 import { saveDoc } from "@/services/api";
+import { Picker } from "@react-native-picker/picker";
 
 export default function CowRegister() {
   const { user } = useAuth();
+  const [selectDate, setSelectDate] = useState(new Date().toString());
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, startTransition] = useTransition();
 
   const {
     handleSubmit,
@@ -26,23 +34,31 @@ export default function CowRegister() {
   });
 
   const handleRegister = async (values: RegisterCowProps) => {
-    try {
-      setLoading(true);
+    startTransition(() => {
       if (user?.uid) {
-        await saveDoc("gados", values, user.uid);
-        Alert.alert("Gado registrado!");
-        reset();
+        saveDoc(
+          "gados",
+          {
+            ...values,
+            dataDeNascimento: selectDate,
+          },
+          user.uid
+        )
+          .then(() => {
+            Alert.alert("Gado registrado!");
+            reset();
+          })
+          .catch((err: Error) => {
+            Alert.alert(err.message);
+          });
       }
-      setLoading(false);
-    } catch (error: any) {
-      setLoading(false);
-      Alert.alert(error.message);
-    }
+    });
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flex: 1 }}>
-      <Screen styles={{ gap: 12, paddingTop: 10 }}>
+    <KeyboardAwareScrollView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        {isLoading && <LoadingIndicator loading={isLoading} />}
         <View style={{ gap: 8 }}>
           <MonoText>Raça</MonoText>
           <Controller
@@ -77,12 +93,24 @@ export default function CowRegister() {
           {errors.tagId && <ErrorLabel text={errors.tagId.message} />}
         </View>
         <View style={{ gap: 8 }}>
-          <MonoText>Gênero</MonoText>
+          <MonoText>Sexo</MonoText>
           <Controller
             name="genero"
             control={control}
             render={({ field: { onBlur, onChange, value } }) => (
-              <InputText value={value} onChange={onChange} onBlur={onBlur} />
+              <>
+                <View style={styles.picker}>
+                  <Picker
+                    mode="dropdown"
+                    selectedValue={value}
+                    onValueChange={onChange}
+                    onBlur={onBlur}
+                  >
+                    <Picker.Item value="Macho" label="Macho" />
+                    <Picker.Item value="Fêmea" label="Fêmea" />
+                  </Picker>
+                </View>
+              </>
             )}
           />
           {errors.genero && <ErrorLabel text={errors.genero.message} />}
@@ -104,20 +132,10 @@ export default function CowRegister() {
         </View>
         <View style={{ gap: 8 }}>
           <MonoText>Data de Nascimento</MonoText>
-          <Controller
-            name="dataDeNascimento"
-            control={control}
-            render={({ field: { onBlur, onChange, value } }) => (
-              <InputText
-                value={value ? value.toString() : ""}
-                onChange={onChange}
-                onBlur={onBlur}
-              />
-            )}
+          <DatePicker
+            date={selectDate}
+            onChange={(date) => setSelectDate(date)}
           />
-          {errors.dataDeNascimento && (
-            <ErrorLabel text={errors.dataDeNascimento.message} />
-          )}
         </View>
         <View style={{ gap: 8 }}>
           <MonoText>Tag da Mãe</MonoText>
@@ -142,15 +160,16 @@ export default function CowRegister() {
           {errors.tagIdPai && <ErrorLabel text={errors.tagIdPai.message} />}
         </View>
         <Button title="Registrar Gado" onPress={handleSubmit(handleRegister)} />
-      </Screen>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    gap: 12,
+  picker: {
+    borderColor: Colors.border,
+    borderWidth: 1,
+    overflow: "hidden",
+    borderRadius: 8,
   },
 });
