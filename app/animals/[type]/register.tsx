@@ -3,7 +3,10 @@ import { View, StyleSheet, Alert } from "react-native";
 import Colors from "@/constants/Colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { RegisterCowProps, RegisterCowSchema } from "@/schema/RegisterCow";
+import {
+  RegisterAnimalProps,
+  RegisterAnimalSchema,
+} from "@/schema/register-animal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { useAuth } from "@/context/auth";
@@ -17,20 +20,20 @@ import DatePicker from "expo-datepicker";
 
 import { getDocuments, saveDoc } from "@/services/api";
 import { Picker } from "@react-native-picker/picker";
-import { useColorScheme } from "@/components/useColorScheme";
+import { useLocalSearchParams } from "expo-router";
 
-type CowProps = {
+type AnimalProps = {
   id: string;
   genero: string;
   apelido: string;
   tagId: string;
 };
 
-export default function CowRegister() {
+export default function AnimalRegister() {
   const { user } = useAuth();
-  const color = useColorScheme();
+  const { type } = useLocalSearchParams() as { type: string };
   const [selectDate, setSelectDate] = useState(new Date().toString());
-  const [cows, setCows] = useState<CowProps[]>([]);
+  const [cows, setAnimals] = useState<AnimalProps[]>([]);
 
   const [isLoading, startTransition] = useTransition();
 
@@ -39,31 +42,32 @@ export default function CowRegister() {
     control,
     reset,
     formState: { errors },
-  } = useForm<RegisterCowProps>({
-    resolver: zodResolver(RegisterCowSchema),
+  } = useForm<RegisterAnimalProps>({
+    resolver: zodResolver(RegisterAnimalSchema),
     defaultValues: {
       genero: "Macho",
     },
   });
 
   useEffect(() => {
-    loadingCows();
+    loadingAnimals();
   }, []);
 
-  const loadingCows = async () => {
+  const loadingAnimals = async () => {
     if (user) {
-      const data = await getDocuments<CowProps>("gados", user.uid);
-      setCows(data);
+      const data = await getDocuments<AnimalProps>("animals", user.uid, type);
+      setAnimals(data);
     }
   };
 
-  const handleRegister = async (values: RegisterCowProps) => {
+  const handleRegister = async (values: RegisterAnimalProps) => {
     startTransition(() => {
       if (user?.uid) {
         saveDoc(
-          "gados",
+          "animals",
           {
             ...values,
+            tipo: type,
             dataDeNascimento: selectDate,
           },
           user.uid
@@ -234,7 +238,7 @@ export default function CowRegister() {
           />
           {errors.tagIdPai && <ErrorLabel text={errors.tagIdPai.message} />}
         </View>
-        <Button title="Registrar Gado" onPress={handleSubmit(handleRegister)} />
+        <Button title="Registrar" onPress={handleSubmit(handleRegister)} />
       </Screen>
     </KeyboardAwareScrollView>
   );

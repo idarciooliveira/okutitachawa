@@ -17,18 +17,22 @@ export default function HomeScreen() {
         text="Bovinos"
         image={require("../../assets/images/animals/male-cow.png")}
         onPress={() => {
-          router.push("/cows");
+          router.push("/animals/cows");
         }}
       />
       <MenuItem
         text="Caprinos"
         image={require("../../assets/images/animals/male-goat.png")}
-        onPress={() => {}}
+        onPress={() => {
+          router.push("/animals/goats");
+        }}
       />
       <MenuItem
         text="Suínos"
         image={require("../../assets/images/animals/male-pig.png")}
-        onPress={() => {}}
+        onPress={() => {
+          router.push("/animals/pigs");
+        }}
       />
       <MenuItem
         text="Relatórios"

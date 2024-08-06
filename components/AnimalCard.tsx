@@ -8,11 +8,19 @@ type Props = {
   TagId: string;
   apelido: string;
   genero: string;
+  tipo: string;
   onPress: () => void;
 };
 
-export default function AnimalCard({ TagId, apelido, genero, onPress }: Props) {
+export default function AnimalCard({
+  TagId,
+  apelido,
+  genero,
+  tipo,
+  onPress,
+}: Props) {
   const color = useColorScheme();
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -25,18 +33,54 @@ export default function AnimalCard({ TagId, apelido, genero, onPress }: Props) {
       ]}
     >
       <View style={styles.insideContainer}>
-        {genero == "Macho" && (
-          <Image
-            style={styles.image}
-            source={require("../assets/images/animals/male-cow.png")}
-          />
+        {tipo == "cows" && (
+          <>
+            {genero == "Macho" ? (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/male-cow.png")}
+              />
+            ) : (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/famale-cow.png")}
+              />
+            )}
+          </>
         )}
-        {genero !== "Macho" && (
-          <Image
-            style={styles.image}
-            source={require("../assets/images/animals/famale-cow.png")}
-          />
+
+        {tipo == "pigs" && (
+          <>
+            {genero == "Macho" ? (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/male-pig.png")}
+              />
+            ) : (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/famale-pig.png")}
+              />
+            )}
+          </>
         )}
+
+        {tipo == "goats" && (
+          <>
+            {genero == "Macho" ? (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/male-goat.png")}
+              />
+            ) : (
+              <Image
+                style={styles.image}
+                source={require("../assets/images/animals/famale-goat.png")}
+              />
+            )}
+          </>
+        )}
+
         <View style={styles.info}>
           <MonoText>{TagId}</MonoText>
           <MonoText>{apelido}</MonoText>

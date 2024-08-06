@@ -1,7 +1,7 @@
 import { getDoc, doc, collection, getDocs, addDoc, where, query } from "firebase/firestore";
 import { database } from "./firebaseConfig";
 
-type Path = 'gados' | 'users' | 'events' | 'ciclos'
+type Path = 'animals' | 'users' | 'events' | 'ciclos'
 
 export async function saveDoc<T>(path: Path, values: T, userId: string) {
      await addDoc(collection(database, path), {
@@ -16,10 +16,11 @@ export async function  getDocById<T>(id: string, path: Path): Promise<T>{
     return data
 }
 
-export async function getDocuments<T>(path: Path,userId: string): Promise<T[]> {
+export async function getDocuments<T>(path: Path,userId: string, type: string): Promise<T[]> {
   const q = query(
     collection(database, path),
-    where("userId", "==", userId)
+    where("userId", "==", userId),
+    where("tipo","==", type)
   );
     const querySnapshot = await getDocs(q);
 

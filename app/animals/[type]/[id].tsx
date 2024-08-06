@@ -2,11 +2,11 @@ import { useWindowDimensions } from "react-native";
 import React from "react";
 import { TabView, SceneMap } from "react-native-tab-view";
 import CustomTabView from "@/components/CustomTabView";
-import CowDetail from "@/components/CowDetail";
 import EventDetail from "@/components/EventDetail";
+import AnimalDetailPage from "@/components/AnimalDetail";
 
 const renderScene = SceneMap({
-  detail: () => <CowDetail />,
+  detail: () => <AnimalDetailPage />,
   event: () => <EventDetail />,
 });
 

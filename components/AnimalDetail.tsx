@@ -9,8 +9,9 @@ import Screen from "@/components/Screen";
 import Colors from "@/constants/Colors";
 import { View } from "./Themed";
 
-type CowProps = {
+type AnimalProps = {
   id: string;
+  tipo: string;
   raca: string;
   apelido: string;
   tagId: string;
@@ -21,21 +22,21 @@ type CowProps = {
   tagIdPai: string;
 };
 
-export default function CowDetailPage() {
+export default function AnimalDetailPage() {
   const { user } = useAuth();
   const { id } = useLocalSearchParams() as { id: string };
-  const [cow, setCow] = useState<CowProps | null>(null);
+  const [animal, setAnimal] = useState<AnimalProps | null>(null);
   const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
-    getCowById();
+    getAnimalById();
   }, []);
 
-  const getCowById = async () => {
+  const getAnimalById = async () => {
     startTransition(() => {
       if (user?.uid) {
-        getDocById<CowProps>(id, "gados").then((data) => {
-          setCow(data);
+        getDocById<AnimalProps>(id, "animals").then((data) => {
+          setAnimal(data);
         });
       }
     });
@@ -52,37 +53,37 @@ export default function CowDetailPage() {
           </MonoText>
           <View style={styles.labelContainer}>
             <MonoText>N da Tag</MonoText>
-            <MonoText>{cow?.tagId}</MonoText>
+            <MonoText>{animal?.tagId}</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Apelido</MonoText>
-            <MonoText>{cow?.apelido}</MonoText>
+            <MonoText>{animal?.apelido}</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Idade</MonoText>
-            {cow?.dataDeNascimento && (
-              <MonoText>{cow.dataDeNascimento}</MonoText>
+            {animal?.dataDeNascimento && (
+              <MonoText>{animal.dataDeNascimento}</MonoText>
             )}
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Genero</MonoText>
-            <MonoText>{cow?.genero}</MonoText>
+            <MonoText>{animal?.genero}</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Peso</MonoText>
-            <MonoText>{cow?.peso} KG</MonoText>
+            <MonoText>{animal?.peso} KG</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Raça</MonoText>
-            <MonoText>{cow?.raca}</MonoText>
+            <MonoText>{animal?.raca}</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Tag Id Mãe</MonoText>
-            <MonoText>{cow?.tagIdMae}</MonoText>
+            <MonoText>{animal?.tagIdMae}</MonoText>
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Tag Id Pai</MonoText>
-            <MonoText>{cow?.tagIdPai}</MonoText>
+            <MonoText>{animal?.tagIdPai}</MonoText>
           </View>
         </View>
       )}

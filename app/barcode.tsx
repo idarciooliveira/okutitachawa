@@ -39,8 +39,8 @@ export default function Barcode() {
 
   async function searchForBarcode(barcode: string) {
     setCount((value) => value + 1);
-    const cow = await getDocById<AnimalProps>(barcode, "gados");
-    if (cow.id === barcode && count == 1) router.replace(`/cows/${cow.id}`);
+    const cow = await getDocById<AnimalProps>(barcode, "animals");
+    if (cow.id === barcode && count == 1) router.replace(`/animals/${cow.id}`);
     setCount(0);
   }
 

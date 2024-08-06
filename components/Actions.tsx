@@ -8,7 +8,7 @@ import {
 } from "react-native-popup-menu";
 
 export default function Actions() {
-  const { id } = useLocalSearchParams() as { id: string };
+  const { id, type } = useLocalSearchParams() as { id: string; type: string };
 
   return (
     <Menu>
@@ -19,17 +19,17 @@ export default function Actions() {
         <MenuOption
           value={1}
           text="Registrar Evento"
-          onSelect={() => router.push(`/cows/new-event/${id}`)}
+          onSelect={() => router.push(`/animals/${type}/new-event/${id}`)}
         />
         <MenuOption
           value={2}
           text="Ciclo estral"
-          onSelect={() => router.push(`/cows/estral/${id}`)}
+          onSelect={() => router.push(`/animals/${type}/estral/${id}`)}
         />
         <MenuOption
           value={2}
           text="Codigo QR"
-          onSelect={() => router.push(`/cows/qrcode/${id}`)}
+          onSelect={() => router.push(`/animals/${type}/qrcode/${id}`)}
         />
       </MenuOptions>
     </Menu>

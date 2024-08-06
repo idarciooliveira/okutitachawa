@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const RegisterCowSchema = z.object({
+export const RegisterAnimalSchema = z.object({
     raca: z.string().toUpperCase(),
     apelido: z.string(),
     tagId: z.string().toUpperCase(),
@@ -10,4 +10,4 @@ export const RegisterCowSchema = z.object({
     tagIdPai: z.string().optional().default('')
 })
   
- export type RegisterCowProps = z.infer<typeof RegisterCowSchema>
+ export type RegisterAnimalProps = z.infer<typeof RegisterAnimalSchema>

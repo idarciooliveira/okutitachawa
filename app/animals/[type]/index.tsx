@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, View, FlatList } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import Colors from "@/constants/Colors";
@@ -11,12 +11,13 @@ import { IActionProps } from "react-native-floating-action";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/auth";
 
-type CowProps = {
+type AnimalProps = {
   id: string;
   genero: string;
   apelido: string;
   userId: string;
   tagId: string;
+  tipo: string;
 };
 
 const actions: IActionProps[] = [
@@ -26,32 +27,33 @@ const actions: IActionProps[] = [
   },
 ];
 
-export default function Cows() {
+export default function Animals() {
   const color = useColorScheme();
+  const { type } = useLocalSearchParams() as { type: string };
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [cows, setCows] = useState<CowProps[]>([]);
+  const [animals, setAnimals] = useState<AnimalProps[]>([]);
 
   useEffect(() => {
-    loadingCows();
+    loadingAnimals();
   }, []);
 
-  const loadingCows = async () => {
+  const loadingAnimals = async () => {
     if (user) {
       setLoading(true);
-      const data = await getDocuments<CowProps>("gados", user.uid);
-      setCows(data);
+      const data = await getDocuments<AnimalProps>("animals", user.uid, type);
+      setAnimals(data);
       setLoading(false);
     }
   };
 
-  const handleRegister = () => router.push("/cows/register");
+  const handleRegister = () => router.push(`/animals/${type}/register`);
 
   return (
     <>
       <FlatList
-        data={cows}
-        onRefresh={async () => await loadingCows()}
+        data={animals}
+        onRefresh={async () => await loadingAnimals()}
         refreshing={loading}
         style={[
           styles.container,
@@ -62,22 +64,16 @@ export default function Cows() {
                 : Colors.dark.background,
           },
         ]}
-        // ListHeaderComponent={() => (
-        //   <TextInput
-        //     style={styles.searchbar}
-        //     autoCorrect={false}
-        //     placeholder="Pesquisar"
-        //   />
-        // )}
         ListHeaderComponentStyle={styles.separator}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={() => (
-          <MonoText>{!loading && "Nenhum gado registrado"}</MonoText>
+          <MonoText>{!loading && "Nenhum animal registrado"}</MonoText>
         )}
         renderItem={({ item }) => (
           <AnimalCard
-            onPress={() => router.push(`/cows/${item.id}`)}
+            onPress={() => router.push(`/animals/${type}/${item.id}`)}
             TagId={item.tagId}
+            tipo={item.tipo}
             apelido={item.apelido}
             genero={item.genero}
           />
