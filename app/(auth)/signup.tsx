@@ -9,9 +9,9 @@ import { Controller, useForm } from "react-hook-form";
 import Button from "@/components/Button";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/services/firebaseConfig";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProps, FormSchema } from "@/schema/Form";
+import { SignUpProps, SignUpSchema } from "@/schema/Form";
 import ErrorLabel from "@/components/ErrorLabel";
 
 export default function SignUp() {
@@ -20,13 +20,13 @@ export default function SignUp() {
     control,
     reset,
     formState: { errors },
-  } = useForm<FormProps>({
-    resolver: zodResolver(FormSchema),
+  } = useForm<SignUpProps>({
+    resolver: zodResolver(SignUpSchema),
   });
 
-  const handleSignUp = async ({ email, password }: FormProps) => {
+  const handleSignUp = async (values: SignUpProps) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
       reset();
       Alert.alert("A sua conta foi criada com sucesso");
     } catch (error: any) {
@@ -37,6 +37,28 @@ export default function SignUp() {
   return (
     <Screen styles={styles.container}>
       <ComicSansBold style={styles.logo}>Criar Conta</ComicSansBold>
+      <View style={styles.group}>
+        <MonoText>Nome</MonoText>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <InputText value={value} onChange={onChange} onBlur={onBlur} />
+          )}
+        />
+        {errors.name && <ErrorLabel text={errors.name.message} />}
+      </View>
+      <View style={styles.group}>
+        <MonoText>Telefone</MonoText>
+        <Controller
+          name="telefone"
+          control={control}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <InputText value={value} onChange={onChange} onBlur={onBlur} />
+          )}
+        />
+        {errors.telefone && <ErrorLabel text={errors.telefone.message} />}
+      </View>
       <View style={styles.group}>
         <MonoText>Email</MonoText>
         <Controller
@@ -66,12 +88,12 @@ export default function SignUp() {
       </View>
       <Button title="Criar Conta" onPress={handleSubmit(handleSignUp)} />
       <Separator />
-      <TouchableOpacity style={styles.googleButton}>
+      {/* <TouchableOpacity style={styles.googleButton}>
         <Icon name="logo-google" size={24} />
         <MonoText style={styles.googleButtonText}>
           Criar conta com o Google
         </MonoText>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Link href={"/signin"} style={{ width: "100%", textAlign: "center" }}>
         <MonoText
           style={{

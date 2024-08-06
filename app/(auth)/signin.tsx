@@ -65,10 +65,10 @@ export default function SignIn() {
       </View>
       <Button title="Entrar" onPress={handleSubmit(handleSignIn)} />
       <Separator />
-      <TouchableOpacity style={styles.googleButton}>
+      {/* <TouchableOpacity style={styles.googleButton}>
         <Icon name="logo-google" size={24} />
         <MonoText style={styles.googleButtonText}>Entrar com o Google</MonoText>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Link href={"/signup"} style={{ width: "100%", textAlign: "center" }}>
         <MonoText
           style={{
