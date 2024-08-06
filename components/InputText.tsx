@@ -8,15 +8,22 @@ import Colors from "@/constants/Colors";
 
 interface Props extends TouchableOpacityProps {
   value: string;
+  secureTextEntry?: boolean;
   onChange: (text: string) => void;
 }
 
-export default function InputText({ value, onChange, ...props }: Props) {
+export default function InputText({
+  value,
+  onChange,
+  secureTextEntry,
+  ...props
+}: Props) {
   const colorScheme = useColorScheme();
 
   return (
     <TextInput
       {...props}
+      secureTextEntry={secureTextEntry}
       autoCapitalize="none"
       onChangeText={onChange}
       value={value}
