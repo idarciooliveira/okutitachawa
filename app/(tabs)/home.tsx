@@ -37,7 +37,9 @@ export default function HomeScreen() {
       <MenuItem
         text="Relatórios"
         image={require("../../assets/images/reports.png")}
-        onPress={() => {}}
+        onPress={() => {
+          router.push("/reports");
+        }}
       />
       <TouchableOpacity
         onPress={() => router.push("/barcode")}

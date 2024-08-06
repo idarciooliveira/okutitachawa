@@ -1,4 +1,4 @@
-import { getDoc, doc, collection, getDocs, addDoc, where, query } from "firebase/firestore";
+import { getDoc, doc, collection, getDocs, addDoc, where, query, count, getCountFromServer } from "firebase/firestore";
 import { database } from "./firebaseConfig";
 
 type Path = 'animals' | 'users' | 'events' | 'ciclos'
@@ -49,6 +49,17 @@ export async function getDocuments<T>(path: Path,userId: string, type: string): 
     }) as T[];
 
     return data
+}
+
+export async function countDocuments(path: Path,userId: string, filter: string, value: string): Promise<number> {
+  const q = query(
+    collection(database, path),
+    where("userId", "==", userId),
+    where(filter,"==", value)
+  );
+    const querySnapshot = await getCountFromServer(q);
+  console.log(querySnapshot)
+   return querySnapshot.data().count
 }
 
 export async function getDocumentsById<T>(path: string, field: string, id: string): Promise<T[]> {
