@@ -16,6 +16,23 @@ export async function  getDocById<T>(id: string, path: Path): Promise<T>{
     return data
 }
 
+export async function getAllDocuments<T>(path: Path,userId: string): Promise<T[]> {
+  const q = query(
+    collection(database, path),
+    where("userId", "==", userId)
+  );
+    const querySnapshot = await getDocs(q);
+
+    const data = querySnapshot.docs.map((data) => {
+      return {
+        ...data.data(),
+        id: data.id,
+      };
+    }) as T[];
+
+    return data
+}
+
 export async function getDocuments<T>(path: Path,userId: string, type: string): Promise<T[]> {
   const q = query(
     collection(database, path),

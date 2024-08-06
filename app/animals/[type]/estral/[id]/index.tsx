@@ -94,13 +94,12 @@ export default function Estrals() {
       }
       markedDatesTemp[format(metaestroEnd, "yyyy-MM-dd")] = {
         color: "yellow", // Diestro color
-        marked: "Distro",
-        name: "Poestro",
+        name: "Diestro",
       };
       for (let j = 1; j < animal.distro; j++) {
         markedDatesTemp[format(addDays(metaestroEnd, j), "yyyy-MM-dd")] = {
           color: "yellow",
-          name: "Distro",
+          name: "Diestro",
         };
       }
     }
