@@ -2,10 +2,8 @@ import { useAuth } from "@/context/auth";
 import { getDocumentsById } from "@/services/api";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useTransition, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import Screen from "@/components/Screen";
-import Colors from "@/constants/Colors";
-import LoadingIndicator from "@/components/LoadingIndicator";
 import { MonoText } from "@/components/StyledText";
 import { View } from "@/components/Themed";
 import Button from "@/components/Button";
@@ -21,7 +19,7 @@ type EstralProps = {
 
 export default function Estrals() {
   const { user } = useAuth();
-  const { id } = useLocalSearchParams() as { id: string };
+  const { id, type } = useLocalSearchParams() as { id: string; type: string };
   const [estrals, setEstrals] = useState<EstralProps[]>([]);
   const [isLoading, startTransition] = useTransition();
 
@@ -41,33 +39,39 @@ export default function Estrals() {
 
   return (
     <Screen styles={{ paddingTop: 12 }}>
-      {isLoading ? (
-        <LoadingIndicator loading={isLoading} />
-      ) : (
-        <>
-          <Button
-            title="Registrar Novo Ciclo"
-            onPress={() => router.push(`/cows/estral/${id}/register`)}
-          />
-          {estrals &&
-            estrals.map((event) => (
-              <View style={[styles.card]} key={event.id}>
-                <View style={styles.labelContainer}>
-                  <MonoText>Inicio</MonoText>
-                  <MonoText>{event.startDate}</MonoText>
-                </View>
-                <View style={styles.labelContainer}>
-                  <MonoText>Fim</MonoText>
-                  <MonoText>{event.endDate}</MonoText>
-                </View>
-                <View style={styles.labelContainer}>
-                  <MonoText>OBS</MonoText>
-                  <MonoText>{event?.obs}</MonoText>
-                </View>
-              </View>
-            ))}
-        </>
-      )}
+      <FlatList
+        data={estrals}
+        renderItem={({ item: estral, index }) => (
+          <View style={[styles.card]} key={index}>
+            <View style={styles.labelContainer}>
+              <MonoText>Inicio</MonoText>
+              <MonoText>{estral.startDate}</MonoText>
+            </View>
+            <View style={styles.labelContainer}>
+              <MonoText>Fim</MonoText>
+              <MonoText>{estral.endDate}</MonoText>
+            </View>
+            <View style={styles.labelContainer}>
+              <MonoText>OBS</MonoText>
+              <MonoText>{estral?.obs}</MonoText>
+            </View>
+          </View>
+        )}
+        refreshing={isLoading}
+        onRefresh={() => getEstralById()}
+        ListHeaderComponent={() => (
+          <>
+            {estrals.length == 0 && (
+              <Button
+                title="Registrar Novo Ciclo"
+                onPress={() =>
+                  router.push(`/animals/${type}/estral/${id}/register`)
+                }
+              />
+            )}
+          </>
+        )}
+      />
     </Screen>
   );
 }
@@ -76,8 +80,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 10,
     padding: 12,
-    borderTopWidth: 30,
-    borderTopColor: Colors.primary,
+    gap: 8,
     shadowColor: "black",
     shadowOffset: {
       width: 0,
@@ -86,7 +89,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
-    marginBottom: 4,
+    marginBottom: 12,
+    marginTop: 12,
   },
   labelContainer: {
     flexDirection: "row",

@@ -17,7 +17,7 @@ type Input = {
 };
 export default function Register() {
   const { user } = useAuth();
-  const { id } = useLocalSearchParams() as { id: string };
+  const { id, type } = useLocalSearchParams() as { id: string; type: string };
 
   const [startDate, setStartDate] = useState(new Date().toString());
   const [endDate, setEndDate] = useState(new Date().toString());
@@ -30,7 +30,12 @@ export default function Register() {
       obs: values.obs ?? "",
       startDate,
       endDate,
+      type,
       animalId: id,
+      poestro: 2,
+      estro: type == "cows" ? 1 : 2,
+      metaestro: 4,
+      distro: 14,
     };
 
     try {

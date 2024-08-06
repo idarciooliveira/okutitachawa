@@ -1,9 +1,12 @@
 import Actions from "@/components/Actions";
 import Colors from "@/constants/Colors";
+import { TranslateAnimalType } from "@/utils/translate-animal-type";
 import { AntDesign } from "@expo/vector-icons";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 
 export default function HomeLayout() {
+  const { type } = useLocalSearchParams() as { type: string };
+
   return (
     <Stack
       screenOptions={{
@@ -29,7 +32,7 @@ export default function HomeLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Gados",
+          title: TranslateAnimalType(type),
         }}
       />
       <Stack.Screen
@@ -48,7 +51,20 @@ export default function HomeLayout() {
       <Stack.Screen
         name="register"
         options={{
-          title: "Novo Gado",
+          title: `Registrar ${TranslateAnimalType(type)}`,
+        }}
+      />
+
+      <Stack.Screen
+        name="estral/[id]/index"
+        options={{
+          title: "Ciclo Estral",
+        }}
+      />
+      <Stack.Screen
+        name="estral/[id]/register"
+        options={{
+          title: `Registrar Ciclo Estral`,
         }}
       />
     </Stack>

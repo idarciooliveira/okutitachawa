@@ -21,7 +21,7 @@ export default function HomeScreen() {
         }}
       />
       <MenuItem
-        text="Caprinos"
+        text="Cabras"
         image={require("../../assets/images/animals/male-goat.png")}
         onPress={() => {
           router.push("/animals/goats");

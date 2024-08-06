@@ -1,5 +1,8 @@
+import { useAuth } from "@/context/auth";
+import { getDocById } from "@/services/api";
 import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, startTransition, useState } from "react";
 import {
   Menu,
   MenuTrigger,
@@ -7,8 +10,29 @@ import {
   MenuOption,
 } from "react-native-popup-menu";
 
+type AnimalProps = {
+  id: string;
+  genero: string;
+};
+
 export default function Actions() {
+  const { user } = useAuth();
   const { id, type } = useLocalSearchParams() as { id: string; type: string };
+  const [animal, setAnimal] = useState<AnimalProps | null>(null);
+
+  useEffect(() => {
+    getAnimalById();
+  }, []);
+
+  const getAnimalById = async () => {
+    startTransition(() => {
+      if (user?.uid) {
+        getDocById<AnimalProps>(id, "animals").then((data) => {
+          setAnimal(data);
+        });
+      }
+    });
+  };
 
   return (
     <Menu>
@@ -21,11 +45,13 @@ export default function Actions() {
           text="Registrar Evento"
           onSelect={() => router.push(`/animals/${type}/new-event/${id}`)}
         />
-        <MenuOption
-          value={2}
-          text="Ciclo estral"
-          onSelect={() => router.push(`/animals/${type}/estral/${id}`)}
-        />
+        {animal && animal.genero != "Macho" && (
+          <MenuOption
+            value={2}
+            text="Ciclo estral"
+            onSelect={() => router.push(`/animals/${type}/estral/${id}`)}
+          />
+        )}
         <MenuOption
           value={2}
           text="Codigo QR"
