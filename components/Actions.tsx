@@ -23,12 +23,7 @@ export default function Actions() {
         />
         <MenuOption
           value={2}
-          text="Alterar estado"
-          onSelect={() => router.push(`/cows/stages/${id}`)}
-        />
-        <MenuOption
-          value={2}
-          text="Registrar ciclo estral"
+          text="Ciclo estral"
           onSelect={() => router.push(`/cows/estral/${id}`)}
         />
         <MenuOption

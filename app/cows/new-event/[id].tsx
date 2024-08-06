@@ -19,7 +19,7 @@ export default function NewEvent() {
   const { user } = useAuth();
   const { id } = useLocalSearchParams() as { id: string };
 
-  const [selectDate, setSelectDate] = useState(new Date().toString());
+  const [selectDate, setSelectDate] = useState("");
   const [isLoading, setLoading] = useState(false);
 
   const {
@@ -32,6 +32,10 @@ export default function NewEvent() {
   });
 
   const handleRegister = async (values: NewEventProps) => {
+    if (!selectDate) {
+      Alert.alert("Selecione a data do evento");
+      return;
+    }
     const data = {
       note: values.nota,
       name: values.name,

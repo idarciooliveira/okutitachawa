@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 import Screen from "@/components/Screen";
 import MenuItem from "@/components/MenuItem";
@@ -14,7 +14,7 @@ export default function HomeScreen() {
   return (
     <Screen styles={styles.container}>
       <MenuItem
-        text="Gado"
+        text="Bovinos"
         image={require("../../assets/images/animals/male-cow.png")}
         onPress={() => {
           router.push("/cows");

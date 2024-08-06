@@ -25,13 +25,13 @@ export default function AnimalCard({ TagId, apelido, genero, onPress }: Props) {
       ]}
     >
       <View style={styles.insideContainer}>
-        {genero.toLocaleLowerCase() == "masculino" && (
+        {genero == "Macho" && (
           <Image
             style={styles.image}
             source={require("../assets/images/animals/male-cow.png")}
           />
         )}
-        {genero.toLocaleLowerCase() !== "masculino" && (
+        {genero !== "Macho" && (
           <Image
             style={styles.image}
             source={require("../assets/images/animals/famale-cow.png")}

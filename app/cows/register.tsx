@@ -1,5 +1,5 @@
-import React, { useState, useTransition } from "react";
-import { View, StyleSheet, ScrollView, Alert } from "react-native";
+import React, { useEffect, useState, useTransition } from "react";
+import { View, StyleSheet, Alert } from "react-native";
 import Colors from "@/constants/Colors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -15,12 +15,22 @@ import { MonoText } from "@/components/StyledText";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import DatePicker from "expo-datepicker";
 
-import { saveDoc } from "@/services/api";
+import { getDocuments, saveDoc } from "@/services/api";
 import { Picker } from "@react-native-picker/picker";
+import { useColorScheme } from "@/components/useColorScheme";
+
+type CowProps = {
+  id: string;
+  genero: string;
+  apelido: string;
+  tagId: string;
+};
 
 export default function CowRegister() {
   const { user } = useAuth();
+  const color = useColorScheme();
   const [selectDate, setSelectDate] = useState(new Date().toString());
+  const [cows, setCows] = useState<CowProps[]>([]);
 
   const [isLoading, startTransition] = useTransition();
 
@@ -31,7 +41,21 @@ export default function CowRegister() {
     formState: { errors },
   } = useForm<RegisterCowProps>({
     resolver: zodResolver(RegisterCowSchema),
+    defaultValues: {
+      genero: "Macho",
+    },
   });
+
+  useEffect(() => {
+    loadingCows();
+  }, []);
+
+  const loadingCows = async () => {
+    if (user) {
+      const data = await getDocuments<CowProps>("gados", user.uid);
+      setCows(data);
+    }
+  };
 
   const handleRegister = async (values: RegisterCowProps) => {
     startTransition(() => {
@@ -57,7 +81,7 @@ export default function CowRegister() {
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <Screen styles={{ gap: 8 }}>
         {isLoading && <LoadingIndicator loading={isLoading} />}
         <View style={{ gap: 8 }}>
           <MonoText>Raça</MonoText>
@@ -105,6 +129,7 @@ export default function CowRegister() {
                     selectedValue={value}
                     onValueChange={onChange}
                     onBlur={onBlur}
+                    placeholder="Selecione o sexo"
                   >
                     <Picker.Item value="Macho" label="Macho" />
                     <Picker.Item value="Fêmea" label="Fêmea" />
@@ -143,24 +168,74 @@ export default function CowRegister() {
             name="tagIdMae"
             control={control}
             render={({ field: { onBlur, onChange, value } }) => (
-              <InputText value={value} onChange={onChange} onBlur={onBlur} />
+              <>
+                <View style={styles.picker}>
+                  <Picker
+                    mode="dropdown"
+                    selectedValue={value}
+                    onValueChange={onChange}
+                    onBlur={onBlur}
+                  >
+                    <Picker.Item
+                      key={""}
+                      value={""}
+                      label={`Selecione a Mãe`}
+                    />
+                    {cows.length > 0 &&
+                      cows
+                        .filter((c) => c.genero == "Fêmea")
+                        .map((cow) => (
+                          <Picker.Item
+                            key={cow.id}
+                            value={cow.id}
+                            label={`${cow.apelido} - ${cow.tagId}`}
+                          />
+                        ))}
+                  </Picker>
+                </View>
+              </>
             )}
           />
           {errors.tagIdMae && <ErrorLabel text={errors.tagIdMae.message} />}
         </View>
         <View style={{ gap: 8 }}>
-          <MonoText>Tag da Mãe</MonoText>
+          <MonoText>Tag do Pai</MonoText>
           <Controller
             name="tagIdPai"
             control={control}
             render={({ field: { onBlur, onChange, value } }) => (
-              <InputText value={value} onChange={onChange} onBlur={onBlur} />
+              <>
+                <View style={styles.picker}>
+                  <Picker
+                    mode="dropdown"
+                    selectedValue={value}
+                    onValueChange={onChange}
+                    onBlur={onBlur}
+                  >
+                    <Picker.Item
+                      key={""}
+                      value={""}
+                      label={`Selecione o Pai`}
+                    />
+                    {cows.length > 0 &&
+                      cows
+                        .filter((c) => c.genero == "Macho")
+                        .map((cow) => (
+                          <Picker.Item
+                            key={cow.id}
+                            value={cow.id}
+                            label={`${cow.apelido} - ${cow.tagId}`}
+                          />
+                        ))}
+                  </Picker>
+                </View>
+              </>
             )}
           />
           {errors.tagIdPai && <ErrorLabel text={errors.tagIdPai.message} />}
         </View>
         <Button title="Registrar Gado" onPress={handleSubmit(handleRegister)} />
-      </ScrollView>
+      </Screen>
     </KeyboardAwareScrollView>
   );
 }

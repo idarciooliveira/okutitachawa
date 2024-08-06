@@ -92,6 +92,7 @@ export default function CowDetailPage() {
 
 const styles = StyleSheet.create({
   card: {
+    gap: 8,
     borderRadius: 10,
     padding: 12,
     borderTopWidth: 30,
