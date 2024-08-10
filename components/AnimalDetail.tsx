@@ -8,6 +8,8 @@ import { MonoText } from "./StyledText";
 import Screen from "@/components/Screen";
 import Colors from "@/constants/Colors";
 import { View } from "./Themed";
+import { formatDistanceToNowStrict } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 type AnimalProps = {
   id: string;
@@ -26,6 +28,8 @@ export default function AnimalDetailPage() {
   const { user } = useAuth();
   const { id } = useLocalSearchParams() as { id: string };
   const [animal, setAnimal] = useState<AnimalProps | null>(null);
+  const [pai, setPai] = useState<AnimalProps | null>(null);
+  const [mae, setMae] = useState<AnimalProps | null>(null);
   const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
@@ -35,11 +39,31 @@ export default function AnimalDetailPage() {
   const getAnimalById = async () => {
     startTransition(() => {
       if (user?.uid) {
-        getDocById<AnimalProps>(id, "animals").then((data) => {
-          setAnimal(data);
+        getDocById<AnimalProps>(id, "animals").then(async (responseChild) => {
+          setAnimal(responseChild);
+          if (!responseChild.tagIdPai) return;
+          getDocById<AnimalProps>(responseChild.tagIdPai, "animals").then(
+            (data) => {
+              if (!data) return;
+              setPai(data);
+            }
+          );
+
+          if (!responseChild.tagIdMae) return;
+          getDocById<AnimalProps>(responseChild.tagIdMae, "animals").then(
+            (data) => {
+              if (!data) return;
+              setMae(data);
+            }
+          );
         });
       }
     });
+  };
+
+  const handleDate = (date: string) => {
+    const [year, month, day] = date.split("/").map(Number);
+    return new Date(year, month - 1, day);
   };
 
   return (
@@ -62,7 +86,14 @@ export default function AnimalDetailPage() {
           <View style={styles.labelContainer}>
             <MonoText>Idade</MonoText>
             {animal?.dataDeNascimento && (
-              <MonoText>{animal.dataDeNascimento}</MonoText>
+              <MonoText>
+                {formatDistanceToNowStrict(
+                  handleDate(animal.dataDeNascimento),
+                  {
+                    locale: ptBR,
+                  }
+                )}
+              </MonoText>
             )}
           </View>
           <View style={styles.labelContainer}>
@@ -79,11 +110,19 @@ export default function AnimalDetailPage() {
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Tag Id Mãe</MonoText>
-            <MonoText>{animal?.tagIdMae}</MonoText>
+            {mae && (
+              <MonoText>
+                {mae?.apelido}-{mae.tagId}
+              </MonoText>
+            )}
           </View>
           <View style={styles.labelContainer}>
             <MonoText>Tag Id Pai</MonoText>
-            <MonoText>{animal?.tagIdPai}</MonoText>
+            {pai && (
+              <MonoText>
+                {pai.apelido}-{pai.tagId}
+              </MonoText>
+            )}
           </View>
         </View>
       )}
