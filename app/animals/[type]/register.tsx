@@ -238,7 +238,7 @@ export default function AnimalRegister() {
           />
           {errors.tagIdPai && <ErrorLabel text={errors.tagIdPai.message} />}
         </View>
-        <Button title="Registrar" onPress={handleSubmit(handleRegister)} />
+        <Button title="Registar" onPress={handleSubmit(handleRegister)} />
       </Screen>
     </KeyboardAwareScrollView>
   );

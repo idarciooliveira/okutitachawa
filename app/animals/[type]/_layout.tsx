@@ -45,13 +45,13 @@ export default function HomeLayout() {
       <Stack.Screen
         name="new-event/[id]"
         options={{
-          title: "Registrar Evento",
+          title: "Registar Evento",
         }}
       />
       <Stack.Screen
         name="register"
         options={{
-          title: `Registrar ${TranslateAnimalType(type)}`,
+          title: `Registar ${TranslateAnimalType(type)}`,
         }}
       />
 
@@ -64,7 +64,7 @@ export default function HomeLayout() {
       <Stack.Screen
         name="estral/[id]/register"
         options={{
-          title: `Registrar Ciclo Estral`,
+          title: `Registar Ciclo Estral`,
         }}
       />
     </Stack>

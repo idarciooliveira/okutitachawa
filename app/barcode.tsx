@@ -9,6 +9,7 @@ import { router } from "expo-router";
 type AnimalProps = {
   id: string;
   apelido: string;
+  tipo: string;
 };
 export default function Barcode() {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -40,7 +41,8 @@ export default function Barcode() {
   async function searchForBarcode(barcode: string) {
     setCount((value) => value + 1);
     const cow = await getDocById<AnimalProps>(barcode, "animals");
-    if (cow.id === barcode && count == 1) router.replace(`/animals/${cow.id}`);
+    if (cow.id === barcode && count == 1)
+      router.replace(`/animals/${cow.tipo}/${cow.id}`);
     setCount(0);
   }
 

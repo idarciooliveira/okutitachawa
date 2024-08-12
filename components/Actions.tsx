@@ -42,7 +42,7 @@ export default function Actions() {
       <MenuOptions>
         <MenuOption
           value={1}
-          text="Registrar Evento"
+          text="Registar Evento"
           onSelect={() => router.push(`/animals/${type}/new-event/${id}`)}
         />
         {animal && animal.genero != "Macho" && (

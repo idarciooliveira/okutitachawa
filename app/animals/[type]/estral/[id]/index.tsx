@@ -134,7 +134,7 @@ export default function Estrals() {
           <>
             {estrals.length == 0 && (
               <Button
-                title="Registrar Novo Ciclo"
+                title="Registar Novo Ciclo"
                 onPress={() =>
                   router.push(`/animals/${type}/estral/${id}/register`)
                 }

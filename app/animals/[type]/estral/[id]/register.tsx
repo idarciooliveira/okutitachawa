@@ -80,7 +80,7 @@ export default function Register() {
           )}
         />
       </View>
-      <Button title="Registrar Ciclo" onPress={handleSubmit(handleRegister)} />
+      <Button title="Registar Ciclo" onPress={handleSubmit(handleRegister)} />
     </Screen>
   );
 }

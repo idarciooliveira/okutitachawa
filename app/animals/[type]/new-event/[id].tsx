@@ -91,7 +91,7 @@ export default function NewEvent() {
         />
         {errors.nota && <ErrorLabel text={errors.nota.message} />}
       </View>
-      <Button title="Registrar Evento" onPress={handleSubmit(handleRegister)} />
+      <Button title="Registar Evento" onPress={handleSubmit(handleRegister)} />
     </Screen>
   );
 }
